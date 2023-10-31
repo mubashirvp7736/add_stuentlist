@@ -1,17 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:student_list/db/functions/functions.dart';
 import 'package:student_list/db/functions/model/model.dart';
 import 'package:student_list/home/list_student.dart';
-
+import 'package:student_list/home/add_student.dart';
 class Editscreen extends StatefulWidget {
   final String name;
   final String age;
   final String clas;
   final String place;
   final int index;
+  final String image;
 
-  const Editscreen({super.key, required this.name, required this.age, required this.clas, required this.place, required this.index});
+  const Editscreen({super.key, required this.name, required this.age, required this.clas, required this.place, required this.index,required this.image});
 
   @override
   State<Editscreen> createState() => _EditscreenState();
@@ -24,11 +28,12 @@ class _EditscreenState extends State<Editscreen> {
   final _classController=TextEditingController();
   final _placecontroller=TextEditingController();
     final _formkey = GlobalKey<FormState>();
-
+ File? _selectedImage;
 
   @override
   void initState() {
-    
+  
+  
 
     super.initState();
 
@@ -36,7 +41,8 @@ class _EditscreenState extends State<Editscreen> {
     _ageController.text=widget.age;
     _classController.text=widget.clas;
     _placecontroller.text=widget.place;
-  }
+  _selectedImage=widget.image!=null ?File(widget.image):null;
+    }
   Future<void> updatestudent(int index)async{
       final studentDB=await Hive.openBox<StudentModel>('student_db');
 
@@ -44,7 +50,7 @@ class _EditscreenState extends State<Editscreen> {
       final updatestudent =StudentModel(name:_nameController.text , age:_ageController.text, clas: _classController.text, address:_placecontroller.text);
        await studentDB.putAt(index, updatestudent);
        getAllStudents();
-       Navigator.push(context, MaterialPageRoute(builder: (context) => MyWidget(),));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => ListStudentWidget(),));
     }
 
    
@@ -67,17 +73,13 @@ class _EditscreenState extends State<Editscreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    child: CircleAvatar(
-                      radius: 80,
-                       backgroundImage:      //_image!=null? FileImage(_image);
-                        NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4CS3kONPRvBZ8Q_Ju-h3RaxKKQpP83FjGZw'),
-                     ),
-                    onTap: () {
-                  // pickimage();
-                    
-                    },
+                  CircleAvatar(
+                    radius: 80,
+                backgroundImage: _selectedImage!=null? FileImage(_selectedImage!):null,
+
                   ),
+                  
+                    
                   SizedBox(
                     height: 30,
                   ),
@@ -165,7 +167,7 @@ class _EditscreenState extends State<Editscreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MyWidget()));
+                                  builder: (context) => ListStudentWidget()));
                         }
                       },
                       style: ElevatedButton.styleFrom(primary: Colors.blue),
@@ -176,5 +178,13 @@ class _EditscreenState extends State<Editscreen> {
             ),
           ),
         ));
+  }
+
+  fromgallery()async{
+
+    final returnimage=await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      _selectedImage=File(returnimage!.path);
+    });
   }
 }

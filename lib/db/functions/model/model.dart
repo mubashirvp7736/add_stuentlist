@@ -19,12 +19,16 @@ class StudentModel {
   @HiveField(4)
   final String address;
 
+  @HiveField(5)
+
+  final String? image;
+
   StudentModel(
       {required this.name,
       required this.age,
       required this.clas,
       required this.address,
-      this.index});
+      this.index,this.image});
 
   
 }

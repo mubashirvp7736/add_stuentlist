@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.red,
       ),
-      home: MyWidget(),
+      home: ListStudentWidget(),
     );
   }
 }

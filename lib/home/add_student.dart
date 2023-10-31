@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:student_list/db/functions/functions.dart';
 import 'package:student_list/db/functions/model/model.dart';
 import 'package:student_list/home/list_student.dart';
-// import 'package:student_list/home/home.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ScreenList extends StatefulWidget {
@@ -22,8 +21,8 @@ class _ScreenState extends State<ScreenList> {
   final _addressController = TextEditingController();
 
   final _formkey = GlobalKey<FormState>();
-
-  late File _image;
+ File? _selectedImage;
+   
   @override
   Widget build(BuildContext context) {
     getAllStudents();
@@ -45,17 +44,18 @@ class _ScreenState extends State<ScreenList> {
                   GestureDetector(
                     child: CircleAvatar(
                       radius: 80,
-                       backgroundImage:      //_image!=null? FileImage(_image);
-                        NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4CS3kONPRvBZ8Q_Ju-h3RaxKKQpP83FjGZw'),
+                       backgroundImage:_selectedImage !=null ? FileImage(_selectedImage! ): 
+                     const  AssetImage('asset/facebook.jpg') as ImageProvider,
                     ),
                     onTap: () {
-                  pickimage();
+                  _pickimage();
                     
                     },
                   ),
                   SizedBox(
                     height: 30,
                   ),
+
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -79,6 +79,7 @@ class _ScreenState extends State<ScreenList> {
                   ),
                   TextFormField(
                     controller: _ageController,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         prefixIcon:
                             Icon(Icons.calendar_month, color: Colors.blue),
@@ -140,7 +141,7 @@ class _ScreenState extends State<ScreenList> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MyWidget()));
+                                  builder: (context) => ListStudentWidget()));
                         }
                       },
                       style: ElevatedButton.styleFrom(primary: Colors.blue),
@@ -164,14 +165,19 @@ class _ScreenState extends State<ScreenList> {
     // print('$_name $_age $_class $_address');
 
     final _student =
-        StudentModel(name: _name, age: _age, clas: _class, address: _address);
+        StudentModel(name: _name, age: _age, clas: _class, address: _address,image:_selectedImage!.path);
     addStudent(_student);
   }
-    void pickimage()async{
-      var image=await ImagePicker().pickImage(source: ImageSource.gallery);
-      // setState(() {
-      //   _image=image as File ;
-      // });
+    void _pickimage()async{
+      final returnImage =await ImagePicker().pickImage(source: ImageSource.gallery);
+      if(returnImage == null){
+        return;
+      }else{
+        setState(() {
+          _selectedImage=File(returnImage.path);
+        });
+  
+      }
     }
 }
 
