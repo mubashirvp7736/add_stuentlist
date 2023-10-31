@@ -168,12 +168,10 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
     // getAllStudents();
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          
-          child: Text('𝕾 𝖙 𝖚 𝖉 𝖊 𝖓 𝖙 𝕷 𝖎 𝖘 𝖙'),
-        ),
+        centerTitle: true,
+        title: Text('Student List'),
 
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.amber[300],
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(0))),
        
@@ -192,7 +190,7 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('asset/facebook.jpg'),
+            image: AssetImage('asset/image (2).webp'),
             fit: BoxFit.cover
             )
         ),
@@ -266,7 +264,7 @@ class _ListStudentWidgetState extends State<ListStudentWidget> {
                             leading: CircleAvatar(
                                 backgroundImage: data.image != null
                                     ? FileImage(File(data.image!))
-                                    : AssetImage("assets/gk.jpeg")
+                                    : AssetImage("asset/facebook.jpg")
                                         as ImageProvider),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
